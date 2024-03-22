@@ -1,6 +1,6 @@
 ---
 title: "Scheduling disciplines for the G/G/k queue<br><small>Évaluation de Performances 2024, DM, INFO4, Polytech Grenoble</small>"
-author: "Alexandre Arle"
+author: "Alexandre Arle - MIRAS Romain"
 date: "2024-03-17"
 output: html_document
 ---
@@ -235,8 +235,8 @@ plot_response_times(k, Service, 1/mu);
 plot_response_times(1, Service, 1/mu*k);
 
 ```
-We can see that the ratio between the average response time obtained by a G/G/k/FCFS queue and the average response
-
+Find the value of the ratio defined in the previous point in a limiting regime where the load approaches
+one from below. Provide some intuition for the obtained value.
 
 ### References
 
