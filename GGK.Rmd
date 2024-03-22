@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # As input, it takes the number of servers (k), their job service times (Service) with their mean value (ES)
 plot_response_times <- function(k, Service, ES){
 
-    debug=1;
+    debug=0;
     scheduling_disciplines = c(1:4); # 'FCFS'=1,'LCFS'=2,'RO-S'=3,'SRPT'=4
     num_arrival_rates=5;
     lambdas = (1/ES) * c(1:num_arrival_rates)/(num_arrival_rates+1) ;
@@ -108,7 +108,7 @@ plot_response_times <- function(k, Service, ES){
             # but substract all current tas
             WaitingListWithCurrentTask=(1:NextArrival)[!is.na(Remaining)];
             WaitingList = WaitingListWithCurrentTask[!WaitingListWithCurrentTask %in% CurrentTask];
-            print(WaitingList)
+            #print(WaitingList)
            
             if(length(WaitingList)>0) {
       
@@ -204,10 +204,10 @@ code is correct. We obtain:
 knitr::opts_chunk$set(echo = FALSE)
 
 set.seed(11); # Set seed for reproducibility
-N = 5; # number of jobs to simulate;
-k = 3; # number of servers
+N = 1e4; # number of jobs to simulate;
+k = 10; # number of servers
 mu=1;
-Service=rexp(N,rate=mu*k); # Service times, the rate here is mu * k
+Service=rexp(N,rate=mu/k); # Service times, the rate here is mu * k
 plot_response_times(k, Service, 1/mu);
 
 ```
@@ -219,10 +219,11 @@ knitr::opts_chunk$set(echo = FALSE)
 
 xm=1; alpha=3;
 set.seed(11); # Set seed for reproducibility
-N = 1e4; # number of jobs to simulate;
+N = 5e3; # number of jobs to simulate;
+k=2
 Service=xm/(runif(N)^(1/alpha)); # This generates Pareto samples
 
-plot_response_times(Service, xm*alpha/(alpha-1));
+plot_response_times(k,Service, xm*alpha/(alpha-1));
 
 ```
 
