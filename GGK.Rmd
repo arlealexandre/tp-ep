@@ -218,22 +218,24 @@ plot_response_times(k, Service, 1/mu);
 
 ```
 
-Then, let us assume that service times follows a Pareto$(x_m,\alpha)$ distribution where $x_m$ and $\alpha$ are the scale and shape parameters, respectively. Let us assume $\alpha=3$ and $x_m=1$. We obtain:
+Now, the goal is to compare the G/G/k queue with a G/G/1 queue having one server that is k times
+faster. For increasing values of the load (i.e., arrival rate divided by service rate) and k = 5, plot the
+ratio between the average response time obtained by a G/G/k/FCFS queue and the average response
+time obtained by a G/G/1/FCFS queue with a server that operates at speed k.
 
 ```{r eval=TRUE, include=TRUE}
 knitr::opts_chunk$set(echo = FALSE)
 
-xm=1; alpha=3;
 set.seed(11); # Set seed for reproducibility
-N = 5e3; # number of jobs to simulate;
-k=2
-Service=xm/(runif(N)^(1/alpha)); # This generates Pareto samples
+N = 10; # number of jobs to simulate;
+k=5
+Service=rexp(N,rate=mu/k); # Service times, the rate here is mu * k
+plot_response_times(k, Service, 1/mu);
 
-plot_response_times(k,Service, xm*alpha/(alpha-1));
+plot_response_times(1, Service, 1/mu*k);
 
 ```
-
-From the plots, we see that FCFS, LCFS and ROS provide the same average response time. SRPT seems to be the best, and this is indeed the case in a broad sense [1].  However, SRPT remains a bit ideal because one does not really know how much processing time remains for any given job. To patch this, a possibility would be to consider SERPT, i.e., Shortest Expected Remaining Processing Time, which has an obvious meaning; this policy may make sense in practice because the service time distribution is known, as it can be learned from the data. Or, would it be possible to do even better than SERPT?
+We can see that the ratio between the average response time obtained by a G/G/k/FCFS queue and the average response
 
 
 ### References
