@@ -154,9 +154,15 @@ plot_response_times <- function(k, Service, ES){
               # SRPT: Shortest Remaining Processing Time
               if (scheduling_discipline==4){
                 for (i in 1:k) {
-                  if (!is.na(CurrentTask[i])) {
-                    CurrentTask[i] = which.min(Remaining);   
-                  }
+                  if(is.na(CurrentTask[i])) {
+                  # here, a task is not running, so we find a new job to serve
+                    if (length(WaitingList)>1) {
+                      CurrentTask[i] = WaitingList[which.min(Remaining[WaitingList])];
+                    } else{
+                      CurrentTask[i] = WaitingList;
+                    }
+                    break;
+                  } 
                 }
               }
       
@@ -204,8 +210,8 @@ code is correct. We obtain:
 knitr::opts_chunk$set(echo = FALSE)
 
 set.seed(11); # Set seed for reproducibility
-N = 1e4; # number of jobs to simulate;
-k = 10; # number of servers
+N = 10; # number of jobs to simulate;
+k = 3; # number of servers
 mu=1;
 Service=rexp(N,rate=mu/k); # Service times, the rate here is mu * k
 plot_response_times(k, Service, 1/mu);
