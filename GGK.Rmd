@@ -68,11 +68,11 @@ plot_response_times <- function(k, Service, ES){
             }
             
             if(is.na(dtA) & all(is.na(dtC))) {
-                break;
+                break; # no more arrivals and no more completions
             } 
         
-            minDtc = pmin(dtC,na.rm=T);
-            dt = min(dtA,minDtc,na.rm=T);
+            minDtc = pmin(dtC,na.rm=T); # minimum time to completion between all servers
+            dt = min(dtA,minDtc,na.rm=T); # time to next event
         
             # update system variables
             t = t + dt;
@@ -84,7 +84,7 @@ plot_response_times <- function(k, Service, ES){
         }
             # Job arrival
             
-            if((NextArrival <=N) & (Arrival[NextArrival] == t)) {
+            if((NextArrival <=N) & (Arrival[NextArrival] == t)) { 
                 Remaining[NextArrival] = Service[NextArrival];
                 NextArrival = NextArrival + 1;
             }
@@ -105,16 +105,13 @@ plot_response_times <- function(k, Service, ES){
             }
             
             # Scheduling discipline
-            # but substract all current tas
-            WaitingListWithCurrentTask=(1:NextArrival)[!is.na(Remaining)];
-            WaitingList = WaitingListWithCurrentTask[!WaitingListWithCurrentTask %in% CurrentTask];
-            #print(WaitingList)
-           
+            WaitingListWithCurrentTask=(1:NextArrival)[!is.na(Remaining)]; # jobs that are waiting or running
+            WaitingList = WaitingListWithCurrentTask[!WaitingListWithCurrentTask %in% CurrentTask]; # jobs that are waiting
+
             if(length(WaitingList)>0) {
       
               # FCFS
               if (scheduling_discipline==1){
-                
                 for (i in 1:k) {
                   if (is.na(CurrentTask[i])) {
                     CurrentTask[i] = head(WaitingList,n=1);
@@ -218,6 +215,10 @@ plot_response_times(k, Service, 1/mu);
 
 ```
 
+The plot shows the average response time for the different scheduling disciplines for the G/G/3 queue with 10 jobs.
+If we look at the number obtain by the little law verification we can see that the code is working correctly because we have that the number of jobs in the system is equal to the arrival rate times the average response time. This is a fundamental property of queueing systems that is called Little's Law.
+So we do have provide numerical evidence that our code is correct
+
 Now, the goal is to compare the G/G/k queue with a G/G/1 queue having one server that is k times
 faster. For increasing values of the load (i.e., arrival rate divided by service rate) and k = 5, plot the
 ratio between the average response time obtained by a G/G/k/FCFS queue and the average response
@@ -235,8 +236,7 @@ plot_response_times(k, Service, 1/mu);
 plot_response_times(1, Service, 1/mu*k);
 
 ```
-Find the value of the ratio defined in the previous point in a limiting regime where the load approaches
-one from below. Provide some intuition for the obtained value.
+The 2 different plot shows the average response time for the different scheduling disciplines for the G/G/k/FCFS queue and the G/G/1/FCFS queue with a server that operates at speed k. We can see that the average response time for the G/G/k/FCFS queue is always lower than the average response time for the G/G/1/FCFS queue with a server that operates at speed k. This is because in the G/G/k/FCFS queue can treat jobs in parallel while in the G/G/1/FCFS queue with a server that operates at speed k can only treat one job at a time. The parallelism in the G/G/k/FCFS queue allows to reduce the average response time.
 
 ### References
 
