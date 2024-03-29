@@ -238,7 +238,7 @@ response_timesGG1 = plot_response_times(1, Service, 1/mu*k);
 
 ```
 
-The 2 different plot shows the average response time for the different scheduling disciplines for the G/G/k/FCFS queue and the G/G/1/FCFS queue with a server that operates at speed k. We can see that the average response time for the G/G/k/FCFS queue is always higher than the average response time for the G/G/1/FCFS queue with a server that operates at speed k. This is due to the fact that the G/G/k/FCFS queue has more servers and so the jobs are served faster.
+The 2 different plot shows the average response time for the different scheduling disciplines for the G/G/k/FCFS queue and the G/G/1/FCFS queue with a server that operates at speed k. We can see that the average response time for the G/G/k/FCFS queue is always higher than the average response time for the G/G/1/FCFS queue with a server that operates at speed k. This is due to the fact that we have not enough jobs to keep all the servers busy in the G/G/k/FCFS queue. So the G/G/1 queue with a server that operates at speed k is always faster than the G/G/k queue for the considered load.
 
 Now, let's plot the ratio between the average response time obtained by a G/G/k/FCFS queue and the average response time obtained by a G/G/1/FCFS queue with a server that operates at speed k.
 
@@ -251,6 +251,8 @@ ratio = response_timesGGk[1,]/response_timesGG1[1,]
 plot(ratio, type = "l", xlab="Load (lambda*E[S])", ylab="Ratio between G/G/k/FCFS and G/G/1/FCFS", lwd = 3);
 
 ```
+
+The plot shows the ratio between the average response time obtained by a G/G/k/FCFS queue and the average response time obtained by a G/G/1/FCFS queue with a server that operates at speed k. We can see that the ratio is always higher than 1 as we expected by the same reasoning we explained before.
 
 ### References
 
