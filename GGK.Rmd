@@ -105,8 +105,8 @@ plot_response_times <- function(k, Service, ES){
         }
         
         # Scheduling discipline
-        WaitingListWithCurrentTask=(1:NextArrival)[!is.na(Remaining)]; # jobs that are waiting or running
-        WaitingList = WaitingListWithCurrentTask[!WaitingListWithCurrentTask %in% CurrentTask]; # jobs that are waiting
+        WaitingListWithCurrentTask=(1:NextArrival)[!is.na(Remaining)]; # jobs that are waiting or running in the servers 
+        WaitingList = WaitingListWithCurrentTask[!WaitingListWithCurrentTask %in% CurrentTask]; # jobs that are waiting in the buffer
         
         if(length(WaitingList)>0) {
           
@@ -173,7 +173,7 @@ plot_response_times <- function(k, Service, ES){
       } # while
       
       ResponseTime = mean(Completion-Arrival); #average response time
-      AvgJobs=AvgJobs/(tail(Completion,n=1)-Arrival[1]);
+      AvgJobs=AvgJobs/(tail(Completion,n=1)-Arrival[1]); # average number of jobs in the system
       
       # Simulation completed. Let's verify Little law: N=lambda*R
       r_names=rownames(R_time)
@@ -210,27 +210,39 @@ set.seed(11); # Set seed for reproducibility
 N = 10; # number of jobs to simulate;
 k = 3; # number of servers
 mu=1;
-Service=rexp(N,rate=mu/k); # Service times, the rate here is mu * k
+Service=rexp(N,rate=mu); # Service times for the G/G/k/FCFS queue
 plot_response_times(k, Service, 1/mu);
 
 ```
 
 The plot shows the average response time for the different scheduling disciplines for the G/G/3 queue with 10 jobs.
 If we look at the number obtain by the little law verification we can see that the code is working correctly because we have that the number of jobs in the system is equal to the arrival rate times the average response time. This is a fundamental property of queueing systems that is called Little's Law.
-So we do have provide numerical evidence that our code is correct
+Disclamer: we do have provide numerical evidence that our code is correct but this will be closer with an increasing number of jobs as we will do in the plot bellow.
+
+```{r eval=TRUE, include=TRUE}
+knitr::opts_chunk$set(echo = FALSE)
+
+set.seed(11); # Set seed for reproducibility
+N = 2e3; # number of jobs to simulate;
+k = 3; # number of servers
+mu=1;
+Service=rexp(N,rate=mu); # Service times for the G/G/k/FCFS queue
+plot_response_times(k, Service, 1/mu);
+
+```
+
 
 Now, the goal is to compare the G/G/k queue with a G/G/1 queue having one server that is k times
 faster. For increasing values of the load (i.e., arrival rate divided by service rate) and k = 5, plot the
 ratio between the average response time obtained by a G/G/k/FCFS queue and the average response
 time obtained by a G/G/1/FCFS queue with a server that operates at speed k.
-
 ```{r eval=TRUE, include=TRUE}
 knitr::opts_chunk$set(echo = FALSE)
 
 set.seed(11); # Set seed for reproducibility
 N = 10; # number of jobs to simulate;
 k=5
-Service=rexp(N,rate=mu/k); # Service times, the rate here is mu * k
+Service=rexp(N,rate=mu); # Service times for the G/G/k/FCFS queue
 
 response_timesGGk = plot_response_times(1, Service, 1/mu);
 
@@ -252,7 +264,7 @@ plot(ratio, type = "l", xlab="Load (lambda*E[S])", ylab="Ratio between G/G/k/FCF
 
 ```
 
-The plot shows the ratio between the average response time obtained by a G/G/k/FCFS queue and the average response time obtained by a G/G/1/FCFS queue with a server that operates at speed k. We can see that the ratio is always higher than 1 as we expected by the same reasoning we explained before.
+The plot shows the ratio between the average response time obtained by a G/G/k/FCFS queue and the average response time obtained by a G/G/1/FCFS queue with a server that operates at speed k. We can see that the ratio is always higher than 1 as we expected by the same reasoning we explained before. The ratio is decreasing as the load is increasing to the max. This is due to the fact that the G/G/k/FCFS queue is able to process multiple jobs at the same time when the load is increasing. So the response time is lower in the G/G/k/FCFS queue.
 
 ### References
 
