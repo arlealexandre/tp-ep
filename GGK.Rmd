@@ -1,7 +1,7 @@
 ---
 title: "Scheduling disciplines for the G/G/k queue<br><small>Évaluation de Performances 2024, DM, INFO4, Polytech Grenoble</small>"
-author: "Alexandre Arle - MIRAS Romain"
-date: "2024-03-17"
+author: "ARLE Alexandre - MIRAS Romain"
+date: "2024-03-31"
 output: html_document
 ---
 
